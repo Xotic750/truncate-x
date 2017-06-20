@@ -23,8 +23,21 @@ if (typeof module === 'object' && module.exports) {
 
 describe('truncate', function () {
   var testString = 'hi-diddly-ho there, neighborino';
+
   it('is a function', function () {
     expect(typeof truncate).toBe('function');
+  });
+
+  it('no arguments', function () {
+    var actual = truncate();
+    var expected = 'undefined';
+    expect(actual).toBe(expected);
+  });
+
+  it('non-strings', function () {
+    var actual = truncate(null);
+    var expected = 'null';
+    expect(actual).toBe(expected);
   });
 
   it('default action', function () {

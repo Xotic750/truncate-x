@@ -99,7 +99,7 @@ var stringSize = function _stringSize(string) {
  * The last characters of the truncated string are replaced with the omission
  * string which defaults to "...".
  *
- * @param {string} [string=''] The string to truncate.
+ * @param {string} string The string to truncate.
  * @param {Object} [options] The options object.
  * @param {number} [options.length=30] The maximum string length.
  * @param {string} [options.omission='...'] The string to indicate text
@@ -108,6 +108,7 @@ var stringSize = function _stringSize(string) {
  * truncate to.
  * @returns {string} Returns the truncated string.
  * @example
+ * var truncate = require('truncate-x');
  *
  * truncate('hi-diddly-ho there, neighborino');
  * // 'hi-diddly-ho there, neighbo...'
