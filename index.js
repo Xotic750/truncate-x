@@ -22,7 +22,7 @@
  *
  * truncate module.
  *
- * @version 1.0.0
+ * @version 1.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -59,9 +59,19 @@ var rsZWJ = '\\u200d';
 /* Used to compose unicode regexes. */
 var reOptMod = rsModifier + '?';
 var rsOptVar = '[' + rsVarRange + ']?';
-var rsOptJoin = '(?:' + rsZWJ + '(?:' + [rsNonAstral, rsRegional, rsSurrPair].join('|') + ')' + rsOptVar + reOptMod + ')*';
+var rsOptJoin = '(?:' + rsZWJ + '(?:' + [
+  rsNonAstral,
+  rsRegional,
+  rsSurrPair
+].join('|') + ')' + rsOptVar + reOptMod + ')*';
 var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = '(?:' + [rsNonAstral + rsCombo + '?', rsCombo, rsRegional, rsSurrPair, rsAstral].join('|') + ')';
+var rsSymbol = '(?:' + [
+  rsNonAstral + rsCombo + '?',
+  rsCombo,
+  rsRegional,
+  rsSurrPair,
+  rsAstral
+].join('|') + ')';
 
 /*
  * Used to match string symbols
@@ -79,18 +89,20 @@ var reHasComplexSymbol = new RegExp('[' + rsZWJ + rsAstralRange + rsComboMarksRa
  * Gets the number of symbols in `string`.
  *
  * @private
- * @param {string} string The string to inspect.
+ * @param {string} string - The string to inspect.
  * @returns {number} Returns the string size.
  */
 var stringSize = function _stringSize(string) {
   if (!string || !reHasComplexSymbol.test(string)) {
     return string.length;
   }
+
   reComplexSymbol.lastIndex = 0;
   var result = 0;
   while (reComplexSymbol.test(string)) {
     result += 1;
   }
+
   return result;
 };
 
@@ -99,12 +111,12 @@ var stringSize = function _stringSize(string) {
  * The last characters of the truncated string are replaced with the omission
  * string which defaults to "...".
  *
- * @param {string} string The string to truncate.
- * @param {Object} [options] The options object.
- * @param {number} [options.length=30] The maximum string length.
- * @param {string} [options.omission='...'] The string to indicate text
+ * @param {string} string - The string to truncate.
+ * @param {Object} [options] - The options object.
+ * @param {number} [options.length=30] - The maximum string length.
+ * @param {string} [options.omission='...'] - The string to indicate text
  * is omitted.
- * @param {RegExp|string} [options.separator] The separator pattern to
+ * @param {RegExp|string} [options.separator] - The separator pattern to
  * truncate to.
  * @returns {string} Returns the truncated string.
  * @example
@@ -139,39 +151,48 @@ module.exports = function truncate(string, options) {
     if ('separator' in options) {
       separator = options.separator;
     }
+
     if ('length' in options) {
       length = toLength(options.length);
     }
+
     if ('omission' in options) {
       omission = safeToString(options.omission);
     }
   }
+
   var strLength = str.length;
   var matchSymbols;
   if (reHasComplexSymbol.test(str)) {
     matchSymbols = str.match(reComplexSymbol);
     strLength = matchSymbols.length;
   }
+
   if (length >= strLength) {
     return str;
   }
+
   var end = length - stringSize(omission);
   if (end < 1) {
     return omission;
   }
+
   var result = matchSymbols ? matchSymbols.slice(0, end).join('') : str.slice(0, end);
   if (isUndefined(separator)) {
     return result + omission;
   }
+
   if (matchSymbols) {
     end += result.length - end;
   }
+
   if (isRegExp(separator)) {
     if (str.slice(end).search(separator)) {
       var substr = result;
-      if (!separator.global) {
+      if (Boolean(separator.global) === false) {
         separator = new RegExp(separator.source, safeToString(reFlags.exec(separator)) + 'g');
       }
+
       separator.lastIndex = 0;
       var newEnd;
       var match = separator.exec(substr);
@@ -179,6 +200,7 @@ module.exports = function truncate(string, options) {
         newEnd = match.index;
         match = separator.exec(substr);
       }
+
       result = result.slice(0, isUndefined(newEnd) ? end : newEnd);
     }
   } else if (str.indexOf(separator, end) !== end) {
@@ -187,5 +209,6 @@ module.exports = function truncate(string, options) {
       result = result.slice(0, index);
     }
   }
+
   return result + omission;
 };
