@@ -1,6 +1,6 @@
 /**
  * @file Truncate a string to a maximum specified length.
- * @version 1.2.0
+ * @version 1.3.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -71,7 +71,7 @@ var reHasComplexSymbol = new RegExp('[' + rsZWJ + rsAstralRange + rsComboMarksRa
  * @returns {number} Returns the string size.
  */
 var stringSize = function _stringSize(string) {
-  if (!string || !reHasComplexSymbol.test(string)) {
+  if (Boolean(string) === false || reHasComplexSymbol.test(string) === false) {
     return string.length;
   }
 
