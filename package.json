@@ -1,6 +1,6 @@
 {
   "name": "truncate-x",
-  "version": "1.4.0",
+  "version": "2.0.0",
   "description": "Truncate a string to a maximum specified length.",
   "homepage": "https://github.com/Xotic750/truncate-x",
   "author": {
@@ -31,8 +31,8 @@
   "dependencies": {
     "is-object-like-x": "^1.5.0",
     "is-regex": "^1.0.4",
-    "safe-to-string-x": "^1.5.0",
-    "to-length-x": "^1.4.0",
+    "safe-to-string-x": "^2.0.0",
+    "to-length-x": "^2.0.0",
     "validate.io-undefined": "^1.0.3"
   },
   "devDependencies": {
