@@ -1,6 +1,6 @@
 /**
  * @file Truncate a string to a maximum specified length.
- * @version 2.0.0
+ * @version 3.0.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -11,12 +11,24 @@
 
 var isUndefined = require('validate.io-undefined');
 var toLength = require('to-length-x');
-var isRegExp = require('is-regex');
+var isRegExp = require('is-regexp-x');
 var safeToString = require('safe-to-string-x');
 var isObjectLike = require('is-object-like-x');
+var isFalsey = require('is-falsey-x');
+var hasOwn = require('has-own-property-x');
+var arraySlice = require('array-slice-x');
+var sMatch = String.prototype.match;
+var sSlice = String.prototype.slice;
+var sSearch = String.prototype.search;
+var sIndexOf = String.prototype.indexOf;
+var sLastIndexOf = String.prototype.lastIndexOf;
+var aJoin = Array.prototype.join;
+var Rx = RegExp;
 
 /* Used to match `RegExp` flags from their coerced string values. */
 var reFlags = /\w*$/;
+var rxTest = reFlags.test;
+var rxExec = reFlags.exec;
 
 /* Used to compose unicode character classes. */
 var rsAstralRange = '\\ud800-\\udfff';
@@ -37,31 +49,31 @@ var rsZWJ = '\\u200d';
 /* Used to compose unicode regexes. */
 var reOptMod = rsModifier + '?';
 var rsOptVar = '[' + rsVarRange + ']?';
-var rsOptJoin = '(?:' + rsZWJ + '(?:' + [
+var rsOptJoin = '(?:' + rsZWJ + '(?:' + aJoin.call([
   rsNonAstral,
   rsRegional,
   rsSurrPair
-].join('|') + ')' + rsOptVar + reOptMod + ')*';
+], '|') + ')' + rsOptVar + reOptMod + ')*';
 var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = '(?:' + [
+var rsSymbol = '(?:' + aJoin.call([
   rsNonAstral + rsCombo + '?',
   rsCombo,
   rsRegional,
   rsSurrPair,
   rsAstral
-].join('|') + ')';
+], '|') + ')';
 
 /*
  * Used to match string symbols
  * @see https://mathiasbynens.be/notes/javascript-unicode
  */
-var reComplexSymbol = new RegExp(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
+var reComplexSymbol = new Rx(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
 
 /*
  * Used to detect strings with [zero-width joiners or code points from
  * the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/).
  */
-var reHasComplexSymbol = new RegExp('[' + rsZWJ + rsAstralRange + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
+var reHasComplexSymbol = new Rx('[' + rsZWJ + rsAstralRange + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
 
 /**
  * Gets the number of symbols in `string`.
@@ -71,13 +83,13 @@ var reHasComplexSymbol = new RegExp('[' + rsZWJ + rsAstralRange + rsComboMarksRa
  * @returns {number} Returns the string size.
  */
 var stringSize = function _stringSize(string) {
-  if (Boolean(string) === false || reHasComplexSymbol.test(string) === false) {
+  if (isFalsey(string) || rxTest.call(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
   reComplexSymbol.lastIndex = 0;
   var result = 0;
-  while (reComplexSymbol.test(string)) {
+  while (rxTest.call(reComplexSymbol, string)) {
     result += 1;
   }
 
@@ -126,23 +138,23 @@ module.exports = function truncate(string, options) {
   var omission = '...';
   var separator;
   if (isObjectLike(options)) {
-    if ('separator' in options) {
+    if (hasOwn(options, 'separator')) {
       separator = options.separator;
     }
 
-    if ('length' in options) {
+    if (hasOwn(options, 'length')) {
       length = toLength(options.length);
     }
 
-    if ('omission' in options) {
+    if (hasOwn(options, 'omission')) {
       omission = safeToString(options.omission);
     }
   }
 
   var strLength = str.length;
   var matchSymbols;
-  if (reHasComplexSymbol.test(str)) {
-    matchSymbols = str.match(reComplexSymbol);
+  if (rxTest.call(reHasComplexSymbol, str)) {
+    matchSymbols = sMatch.call(str, reComplexSymbol);
     strLength = matchSymbols.length;
   }
 
@@ -155,7 +167,7 @@ module.exports = function truncate(string, options) {
     return omission;
   }
 
-  var result = matchSymbols ? matchSymbols.slice(0, end).join('') : str.slice(0, end);
+  var result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), '') : sSlice.call(str, 0, end);
   if (isUndefined(separator)) {
     return result + omission;
   }
@@ -165,26 +177,26 @@ module.exports = function truncate(string, options) {
   }
 
   if (isRegExp(separator)) {
-    if (str.slice(end).search(separator)) {
+    if (sSearch.call(sSlice.call(str, end), separator)) {
       var substr = result;
-      if (Boolean(separator.global) === false) {
-        separator = new RegExp(separator.source, safeToString(reFlags.exec(separator)) + 'g');
+      if (isFalsey(separator.global)) {
+        separator = new Rx(separator.source, safeToString(rxExec.call(reFlags, separator)) + 'g');
       }
 
       separator.lastIndex = 0;
       var newEnd;
-      var match = separator.exec(substr);
+      var match = rxExec.call(separator, substr);
       while (match) {
         newEnd = match.index;
-        match = separator.exec(substr);
+        match = rxExec.call(separator, substr);
       }
 
-      result = result.slice(0, isUndefined(newEnd) ? end : newEnd);
+      result = sSlice.call(result, 0, isUndefined(newEnd) ? end : newEnd);
     }
-  } else if (str.indexOf(separator, end) !== end) {
-    var index = result.lastIndexOf(separator);
+  } else if (sIndexOf.call(str, separator, end) !== end) {
+    var index = sLastIndexOf.call(result, separator);
     if (index > -1) {
-      result = result.slice(0, index);
+      result = sSlice.call(result, 0, index);
     }
   }
 
