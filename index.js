@@ -1,6 +1,6 @@
 /**
  * @file Truncate a string to a maximum specified length.
- * @version 3.0.0
+ * @version 3.1.0
  * @author Xotic750 <Xotic750@gmail.com>
  * @copyright  Xotic750
  * @license {@link <https://opensource.org/licenses/MIT> MIT}
@@ -10,9 +10,9 @@
 'use strict';
 
 var isUndefined = require('validate.io-undefined');
-var toLength = require('to-length-x');
+var toLength = require('to-length-x').toLength2018;
 var isRegExp = require('is-regexp-x');
-var safeToString = require('safe-to-string-x');
+var safeToString = require('to-string-symbols-supported-x');
 var isObjectLike = require('is-object-like-x');
 var isFalsey = require('is-falsey-x');
 var hasOwn = require('has-own-property-x');
