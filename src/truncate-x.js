@@ -7,73 +7,62 @@
  * @module truncate-x
  */
 
-'use strict';
+const isUndefined = require('validate.io-undefined');
+const toLength = require('to-length-x').toLength2018;
+const isRegExp = require('is-regexp-x');
+const safeToString = require('to-string-symbols-supported-x');
+const isObjectLike = require('is-object-like-x');
+const isFalsey = require('is-falsey-x');
+const hasOwn = require('has-own-property-x');
+const arraySlice = require('array-slice-x');
 
-var isUndefined = require('validate.io-undefined');
-var toLength = require('to-length-x').toLength2018;
-var isRegExp = require('is-regexp-x');
-var safeToString = require('to-string-symbols-supported-x');
-var isObjectLike = require('is-object-like-x');
-var isFalsey = require('is-falsey-x');
-var hasOwn = require('has-own-property-x');
-var arraySlice = require('array-slice-x');
-var sMatch = String.prototype.match;
-var sSlice = String.prototype.slice;
-var sSearch = String.prototype.search;
-var sIndexOf = String.prototype.indexOf;
-var sLastIndexOf = String.prototype.lastIndexOf;
-var aJoin = Array.prototype.join;
-var Rx = RegExp;
+const sMatch = String.prototype.match;
+const sSlice = String.prototype.slice;
+const sSearch = String.prototype.search;
+const sIndexOf = String.prototype.indexOf;
+const sLastIndexOf = String.prototype.lastIndexOf;
+const aJoin = Array.prototype.join;
+const Rx = RegExp;
 
 /* Used to match `RegExp` flags from their coerced string values. */
-var reFlags = /\w*$/;
-var rxTest = reFlags.test;
-var rxExec = reFlags.exec;
+const reFlags = /\w*$/;
+const rxTest = reFlags.test;
+const rxExec = reFlags.exec;
 
 /* Used to compose unicode character classes. */
-var rsAstralRange = '\\ud800-\\udfff';
-var rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23';
-var rsComboSymbolsRange = '\\u20d0-\\u20f0';
-var rsVarRange = '\\ufe0e\\ufe0f';
+const rsAstralRange = '\\ud800-\\udfff';
+const rsComboMarksRange = '\\u0300-\\u036f\\ufe20-\\ufe23';
+const rsComboSymbolsRange = '\\u20d0-\\u20f0';
+const rsVarRange = '\\ufe0e\\ufe0f';
 
 /* Used to compose unicode capture groups. */
-var rsAstral = '[' + rsAstralRange + ']';
-var rsCombo = '[' + rsComboMarksRange + rsComboSymbolsRange + ']';
-var rsFitz = '\\ud83c[\\udffb-\\udfff]';
-var rsModifier = '(?:' + rsCombo + '|' + rsFitz + ')';
-var rsNonAstral = '[^' + rsAstralRange + ']';
-var rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}';
-var rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]';
-var rsZWJ = '\\u200d';
+const rsAstral = `[${rsAstralRange}]`;
+const rsCombo = `[${rsComboMarksRange}${rsComboSymbolsRange}]`;
+const rsFitz = '\\ud83c[\\udffb-\\udfff]';
+const rsModifier = `(?:${rsCombo}|${rsFitz})`;
+const rsNonAstral = `[^${rsAstralRange}]`;
+const rsRegional = '(?:\\ud83c[\\udde6-\\uddff]){2}';
+const rsSurrPair = '[\\ud800-\\udbff][\\udc00-\\udfff]';
+const rsZWJ = '\\u200d';
 
 /* Used to compose unicode regexes. */
-var reOptMod = rsModifier + '?';
-var rsOptVar = '[' + rsVarRange + ']?';
-var rsOptJoin = '(?:' + rsZWJ + '(?:' + aJoin.call([
-  rsNonAstral,
-  rsRegional,
-  rsSurrPair
-], '|') + ')' + rsOptVar + reOptMod + ')*';
-var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = '(?:' + aJoin.call([
-  rsNonAstral + rsCombo + '?',
-  rsCombo,
-  rsRegional,
-  rsSurrPair,
-  rsAstral
-], '|') + ')';
+const reOptMod = `${rsModifier}?`;
+const rsOptVar = `[${rsVarRange}]?`;
+const rsOptJoin = `(?:${rsZWJ}(?:${aJoin.call([rsNonAstral, rsRegional, rsSurrPair], '|')})${rsOptVar}${reOptMod})*`;
+const rsSeq = rsOptVar + reOptMod + rsOptJoin;
+const rsSymbol = `(?:${aJoin.call([`${rsNonAstral + rsCombo}?`, rsCombo, rsRegional, rsSurrPair, rsAstral], '|')})`;
 
 /*
  * Used to match string symbols
  * @see https://mathiasbynens.be/notes/javascript-unicode
  */
-var reComplexSymbol = new Rx(rsFitz + '(?=' + rsFitz + ')|' + rsSymbol + rsSeq, 'g');
+const reComplexSymbol = new Rx(`${rsFitz}(?=${rsFitz})|${rsSymbol}${rsSeq}`, 'g');
 
 /*
  * Used to detect strings with [zero-width joiners or code points from
  * the astral planes](http://eev.ee/blog/2015/09/12/dark-corners-of-unicode/).
  */
-var reHasComplexSymbol = new Rx('[' + rsZWJ + rsAstralRange + rsComboMarksRange + rsComboSymbolsRange + rsVarRange + ']');
+const reHasComplexSymbol = new Rx(`[${rsZWJ}${rsAstralRange}${rsComboMarksRange}${rsComboSymbolsRange}${rsVarRange}]`);
 
 /**
  * Gets the number of symbols in `string`.
@@ -82,13 +71,13 @@ var reHasComplexSymbol = new Rx('[' + rsZWJ + rsAstralRange + rsComboMarksRange 
  * @param {string} string - The string to inspect.
  * @returns {number} Returns the string size.
  */
-var stringSize = function _stringSize(string) {
+const stringSize = function _stringSize(string) {
   if (isFalsey(string) || rxTest.call(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
   reComplexSymbol.lastIndex = 0;
-  var result = 0;
+  let result = 0;
   while (rxTest.call(reComplexSymbol, string)) {
     result += 1;
   }
@@ -102,7 +91,7 @@ var stringSize = function _stringSize(string) {
  * string which defaults to "...".
  *
  * @param {string} string - The string to truncate.
- * @param {Object} [options] - The options object.
+ * @param {object} [options] - The options object.
  * @param {number} [options.length=30] - The maximum string length.
  * @param {string} [options.omission='...'] - The string to indicate text
  * is omitted.
@@ -133,10 +122,11 @@ var stringSize = function _stringSize(string) {
  * // 'hi-diddly-ho there, neig [...]'
  */
 module.exports = function truncate(string, options) {
-  var str = safeToString(string);
-  var length = 30;
-  var omission = '...';
-  var separator;
+  const str = safeToString(string);
+  let length = 30;
+  let omission = '...';
+  let separator;
+
   if (isObjectLike(options)) {
     if (hasOwn(options, 'separator')) {
       separator = options.separator;
@@ -151,8 +141,9 @@ module.exports = function truncate(string, options) {
     }
   }
 
-  var strLength = str.length;
-  var matchSymbols;
+  let strLength = str.length;
+  let matchSymbols;
+
   if (rxTest.call(reHasComplexSymbol, str)) {
     matchSymbols = sMatch.call(str, reComplexSymbol);
     strLength = matchSymbols.length;
@@ -162,12 +153,14 @@ module.exports = function truncate(string, options) {
     return str;
   }
 
-  var end = length - stringSize(omission);
+  let end = length - stringSize(omission);
+
   if (end < 1) {
     return omission;
   }
 
-  var result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), '') : sSlice.call(str, 0, end);
+  let result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), '') : sSlice.call(str, 0, end);
+
   if (isUndefined(separator)) {
     return result + omission;
   }
@@ -178,14 +171,15 @@ module.exports = function truncate(string, options) {
 
   if (isRegExp(separator)) {
     if (sSearch.call(sSlice.call(str, end), separator)) {
-      var substr = result;
+      const substr = result;
+
       if (isFalsey(separator.global)) {
-        separator = new Rx(separator.source, safeToString(rxExec.call(reFlags, separator)) + 'g');
+        separator = new Rx(separator.source, `${safeToString(rxExec.call(reFlags, separator))}g`);
       }
 
       separator.lastIndex = 0;
-      var newEnd;
-      var match = rxExec.call(separator, substr);
+      let newEnd;
+      let match = rxExec.call(separator, substr);
       while (match) {
         newEnd = match.index;
         match = rxExec.call(separator, substr);
@@ -194,7 +188,8 @@ module.exports = function truncate(string, options) {
       result = sSlice.call(result, 0, isUndefined(newEnd) ? end : newEnd);
     }
   } else if (sIndexOf.call(str, separator, end) !== end) {
-    var index = sLastIndexOf.call(result, separator);
+    const index = sLastIndexOf.call(result, separator);
+
     if (index > -1) {
       result = sSlice.call(result, 0, index);
     }
