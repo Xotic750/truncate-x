@@ -51,11 +51,11 @@
   "dependencies": {
     "array-slice-x": "^3.5.0",
     "has-own-property-x": "^3.2.0",
-    "is-falsey-x": "^2.0.4",
-    "is-object-like-x": "^2.0.3",
+    "is-falsey-x": "^2.0.5",
+    "is-object-like-x": "^2.0.4",
     "is-regexp-x": "^2.2.0",
-    "to-length-x": "^3.0.0",
-    "to-string-symbols-supported-x": "^2.0.2",
+    "to-length-x": "^4.0.1",
+    "to-string-symbols-supported-x": "^2.0.3",
     "validate.io-undefined": "^1.0.3"
   },
   "devDependencies": {
