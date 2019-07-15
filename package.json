@@ -50,7 +50,7 @@
   },
   "dependencies": {
     "array-slice-x": "^4.0.3",
-    "has-own-property-x": "^3.2.0",
+    "has-own-property-x": "^4.0.0",
     "is-falsey-x": "^2.0.6",
     "is-object-like-x": "^2.0.6",
     "is-regexp-x": "^2.2.0",
