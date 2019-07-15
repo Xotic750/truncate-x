@@ -53,7 +53,7 @@
     "has-own-property-x": "^4.0.0",
     "is-falsey-x": "^2.0.6",
     "is-object-like-x": "^2.0.6",
-    "is-regexp-x": "^3.0.0",
+    "is-regexp-x": "^3.0.1",
     "to-length-x": "^4.0.3",
     "to-string-symbols-supported-x": "^2.0.4",
     "validate.io-undefined": "^1.0.3"
