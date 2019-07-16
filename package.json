@@ -49,13 +49,13 @@
     "url": "https://github.com/Xotic750/truncate-x/issues"
   },
   "dependencies": {
-    "array-slice-x": "^4.0.5",
-    "has-own-property-x": "^4.0.2",
-    "is-falsey-x": "^2.0.8",
-    "is-object-like-x": "^2.0.8",
-    "is-regexp-x": "^3.0.3",
-    "to-length-x": "^4.0.5",
-    "to-string-symbols-supported-x": "^2.0.5",
+    "array-slice-x": "^4.0.6",
+    "has-own-property-x": "^4.0.3",
+    "is-falsey-x": "^2.0.9",
+    "is-object-like-x": "^2.0.9",
+    "is-regexp-x": "^3.0.4",
+    "to-length-x": "^4.0.6",
+    "to-string-symbols-supported-x": "^2.0.6",
     "validate.io-undefined": "^1.0.3"
   },
   "devDependencies": {
