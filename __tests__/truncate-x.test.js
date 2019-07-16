@@ -28,10 +28,12 @@ describe('truncate', function() {
 
   it('is a function', function() {
     expect.assertions(1);
+    expect.assertions(1);
     expect(typeof truncate).toBe('function');
   });
 
   it('no arguments', function() {
+    expect.assertions(1);
     expect.assertions(1);
     const actual = truncate();
     const expected = 'undefined';
@@ -40,6 +42,7 @@ describe('truncate', function() {
 
   it('non-strings', function() {
     expect.assertions(1);
+    expect.assertions(1);
     const actual = truncate(null);
     const expected = 'null';
     expect(actual).toBe(expected);
@@ -47,12 +50,14 @@ describe('truncate', function() {
 
   it('default action', function() {
     expect.assertions(1);
+    expect.assertions(1);
     const actual = truncate(testString);
     const expected = 'hi-diddly-ho there, neighbo...';
     expect(actual).toBe(expected);
   });
 
   it('with length and seperator string', function() {
+    expect.assertions(1);
     expect.assertions(1);
     const actual = truncate(testString, {
       length: 24,
@@ -64,6 +69,7 @@ describe('truncate', function() {
 
   it('with length and seperator regex', function() {
     expect.assertions(1);
+    expect.assertions(1);
     const actual = truncate(testString, {
       length: 24,
       separator: /,? +/,
@@ -73,6 +79,7 @@ describe('truncate', function() {
   });
 
   it('with omission', function() {
+    expect.assertions(1);
     expect.assertions(1);
     const actual = truncate(testString, {omission: ' [...]'});
     const expected = 'hi-diddly-ho there, neig [...]';
