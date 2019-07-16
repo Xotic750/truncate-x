@@ -7,14 +7,15 @@
  * @module truncate-x
  */
 
-const isUndefined = require('validate.io-undefined');
-const toLength = require('to-length-x').toLength2018;
-const isRegExp = require('is-regexp-x');
-const safeToString = require('to-string-symbols-supported-x');
-const isObjectLike = require('is-object-like-x');
-const isFalsey = require('is-falsey-x');
-const hasOwn = require('has-own-property-x');
-const arraySlice = require('array-slice-x');
+import isUndefined from 'validate.io-undefined';
+
+import {toLength2018 as toLength} from 'to-length-x';
+import isRegExp from 'is-regexp-x';
+import safeToString from 'to-string-symbols-supported-x';
+import isObjectLike from 'is-object-like-x';
+import isFalsey from 'is-falsey-x';
+import hasOwn from 'has-own-property-x';
+import arraySlice from 'array-slice-x';
 
 const sMatch = String.prototype.match;
 const sSlice = String.prototype.slice;
@@ -121,7 +122,7 @@ const stringSize = function _stringSize(string) {
  * });
  * // 'hi-diddly-ho there, neig [...]'
  */
-module.exports = function truncate(string, options) {
+export default function truncate(string, options) {
   const str = safeToString(string);
   let length = 30;
   let omission = '...';
@@ -196,4 +197,4 @@ module.exports = function truncate(string, options) {
   }
 
   return result + omission;
-};
+}
