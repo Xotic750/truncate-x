@@ -1,12 +1,3 @@
-/**
- * @file Truncate a string to a maximum specified length.
- * @version 3.1.1
- * @author Xotic750 <Xotic750@gmail.com>
- * @copyright  Xotic750
- * @license {@link <https://opensource.org/licenses/MIT> MIT}
- * @module truncate-x
- */
-
 import isUndefined from 'validate.io-undefined';
 
 import {toLength2018 as toLength} from 'to-length-x';
@@ -99,28 +90,6 @@ const stringSize = function _stringSize(string) {
  * @param {RegExp|string} [options.separator] - The separator pattern to
  * truncate to.
  * @returns {string} Returns the truncated string.
- * @example
- * var truncate = require('truncate-x');
- *
- * truncate('hi-diddly-ho there, neighborino');
- * // 'hi-diddly-ho there, neighbo...'
- *
- * truncate('hi-diddly-ho there, neighborino', {
- *   'length': 24,
- *   'separator': ' '
- * });
- * // 'hi-diddly-ho there,...'
- *
- * truncate('hi-diddly-ho there, neighborino', {
- *   'length': 24,
- *   'separator': /,? +/
- * });
- * // 'hi-diddly-ho there...'
- *
- * truncate('hi-diddly-ho there, neighborino', {
- *   'omission': ' [...]'
- * });
- * // 'hi-diddly-ho there, neig [...]'
  */
 export default function truncate(string, options) {
   const str = safeToString(string);
