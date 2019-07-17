@@ -54,8 +54,7 @@
     "is-object-like-x": "^2.0.12",
     "is-regexp-x": "^3.0.6",
     "to-length-x": "^4.0.10",
-    "to-string-symbols-supported-x": "^2.0.8",
-    "is-falsey-x": "^2.0.11"
+    "to-string-symbols-supported-x": "^2.0.8"
   },
   "devDependencies": {
     "@babel/cli": "^7.5.0",
