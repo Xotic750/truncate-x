@@ -91,7 +91,7 @@ const stringSize = function _stringSize(string) {
  * truncate to.
  * @returns {string} Returns the truncated string.
  */
-export default function truncate(string, options) {
+const truncate = function truncate(string, options) {
   const str = safeToString(string);
   let length = 30;
   let omission = '...';
@@ -166,4 +166,6 @@ export default function truncate(string, options) {
   }
 
   return result + omission;
-}
+};
+
+export default truncate;
