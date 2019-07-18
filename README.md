@@ -21,51 +21,50 @@
 <a name="module_truncate-x"></a>
 
 ## truncate-x
+
 Truncate a string to a maximum specified length.
 
-**Version**: 3.1.1  
-**Author**: Xotic750 <Xotic750@gmail.com>  
-**License**: [MIT](&lt;https://opensource.org/licenses/MIT&gt;)  
-**Copyright**: Xotic750  
 <a name="exp_module_truncate-x--module.exports"></a>
 
 ### `module.exports(string, [options])` ⇒ <code>string</code> ⏏
+
 Truncates `string` if it's longer than the given maximum string length.
 The last characters of the truncated string are replaced with the omission
 string which defaults to "...".
 
 **Kind**: Exported function  
-**Returns**: <code>string</code> - Returns the truncated string.  
+**Returns**: <code>string</code> - Returns the truncated string.
 
-| Param | Type | Default | Description |
-| --- | --- | --- | --- |
-| string | <code>string</code> |  | The string to truncate. |
-| [options] | <code>Object</code> |  | The options object. |
-| [options.length] | <code>number</code> | <code>30</code> | The maximum string length. |
-| [options.omission] | <code>string</code> | <code>&quot;&#x27;...&#x27;&quot;</code> | The string to indicate text is omitted. |
-| [options.separator] | <code>RegExp</code> \| <code>string</code> |  | The separator pattern to truncate to. |
+| Param               | Type                                       | Default                                  | Description                             |
+| ------------------- | ------------------------------------------ | ---------------------------------------- | --------------------------------------- |
+| string              | <code>string</code>                        |                                          | The string to truncate.                 |
+| [options]           | <code>Object</code>                        |                                          | The options object.                     |
+| [options.length]    | <code>number</code>                        | <code>30</code>                          | The maximum string length.              |
+| [options.omission]  | <code>string</code>                        | <code>&quot;&#x27;...&#x27;&quot;</code> | The string to indicate text is omitted. |
+| [options.separator] | <code>RegExp</code> \| <code>string</code> |                                          | The separator pattern to truncate to.   |
 
-**Example**  
+**Example**
+
 ```js
-var truncate = require('truncate-x');
+import truncate from 'truncate-x';
 
 truncate('hi-diddly-ho there, neighborino');
 // 'hi-diddly-ho there, neighbo...'
 
 truncate('hi-diddly-ho there, neighborino', {
-  'length': 24,
-  'separator': ' '
+  length: 24,
+  separator: ' ',
 });
 // 'hi-diddly-ho there,...'
 
 truncate('hi-diddly-ho there, neighborino', {
-  'length': 24,
-  'separator': /,? +/
+  length: 24,
+  separator: /,? +/,
 });
 // 'hi-diddly-ho there...'
 
 truncate('hi-diddly-ho there, neighborino', {
-  'omission': ' [...]'
+  omission: ' [...]',
 });
 // 'hi-diddly-ho there, neig [...]'
 ```

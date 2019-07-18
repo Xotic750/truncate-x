@@ -1,6 +1,6 @@
 {
   "name": "truncate-x",
-  "version": "3.1.1",
+  "version": "4.0.0",
   "description": "Truncate a string to a maximum specified length.",
   "homepage": "https://github.com/Xotic750/truncate-x",
   "author": {

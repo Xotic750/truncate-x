@@ -1,4 +1,4 @@
-let truncate;
+import truncate from '../src/truncate-x';
 
 describe('truncate', function() {
   const testString = 'hi-diddly-ho there, neighborino';
