@@ -2,13 +2,13 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-07-25T23:00:52.489Z",
+  "date": "2019-07-26T16:25:33.776Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
   "hash": "318d0fb0799be8bef20d",
   "license": "MIT",
-  "version": "4.0.7"
+  "version": "4.0.8"
 }
 */
 (function webpackUniversalModuleDefinition(root, factory) {

@@ -1,10 +1,12 @@
-<a href="https://travis-ci.org/Xotic750/truncate-x"
+<a
+  href="https://travis-ci.org/Xotic750/truncate-x"
   title="Travis status">
 <img
   src="https://travis-ci.org/Xotic750/truncate-x.svg?branch=master"
   alt="Travis status" height="18">
 </a>
-<a href="https://david-dm.org/Xotic750/truncate-x"
+<a
+  href="https://david-dm.org/Xotic750/truncate-x"
   title="Dependency status">
 <img src="https://david-dm.org/Xotic750/truncate-x/status.svg"
   alt="Dependency status" height="18"/>
@@ -15,15 +17,23 @@
 <img src="https://david-dm.org/Xotic750/truncate-x/dev-status.svg"
   alt="devDependency status" height="18"/>
 </a>
-<a href="https://badge.fury.io/js/truncate-x"
+<a
+  href="https://badge.fury.io/js/truncate-x"
   title="npm version">
 <img src="https://badge.fury.io/js/truncate-x.svg"
   alt="npm version" height="18">
 </a>
-<a href="https://www.jsdelivr.com/package/npm/truncate-x"
+<a
+  href="https://www.jsdelivr.com/package/npm/truncate-x"
   title="jsDelivr hits">
 <img src="https://data.jsdelivr.com/v1/package/npm/truncate-x/badge?style=rounded"
   alt="jsDelivr hits" height="18">
+</a>
+<a
+  href="https://bettercodehub.com/results/Xotic750/truncate-x"
+  title="bettercodehub score">
+<img src="https://bettercodehub.com/edge/badge/Xotic750/truncate-x?branch=master"
+  alt="bettercodehub score" height="18">
 </a>
 
 <a name="module_truncate-x"></a>
