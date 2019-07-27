@@ -4,9 +4,7 @@ import safeToString from 'to-string-symbols-supported-x';
 import isObjectLike from 'is-object-like-x';
 import hasOwn from 'has-own-property-x';
 import arraySlice from 'array-slice-x';
-/** @type {BooleanConstructor} */
-
-var castBoolean = true.constructor;
+import toBoolean from 'to-boolean-x';
 var EMPTY_STRING = '';
 var sMatch = EMPTY_STRING.match;
 var sSlice = EMPTY_STRING.slice;
@@ -66,7 +64,7 @@ var reHasComplexSymbol = new RegExpCtr("[".concat(rsZWJ).concat(rsAstralRange).c
  */
 
 var stringSize = function _stringSize(string) {
-  if (castBoolean(string) === false || rxTest.call(reHasComplexSymbol, string) === false) {
+  if (toBoolean(string) === false || rxTest.call(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
@@ -148,7 +146,7 @@ var truncate = function truncate(string, options) {
     if (sSearch.call(sSlice.call(str, end), separator)) {
       var substr = result;
 
-      if (castBoolean(separator.global) === false) {
+      if (toBoolean(separator.global) === false) {
         separator = new RegExpCtr(separator.source, "".concat(safeToString(rxExec.call(reFlags, separator)), "g"));
       }
 

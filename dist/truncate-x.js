@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-07-27T15:27:54.085Z",
+  "date": "2019-07-27T19:14:37.588Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
-  "hash": "8895c4b799f6a7314c14",
+  "hash": "62bcbe4367bbc40dd865",
   "license": "MIT",
   "version": "4.0.9"
 }
@@ -2411,9 +2411,7 @@ var array_slice_x_esm_slice = function slice(array, start, end) {
 
 
 
-/** @type {BooleanConstructor} */
 
-var truncate_x_esm_castBoolean = true.constructor;
 var truncate_x_esm_EMPTY_STRING = '';
 var sMatch = truncate_x_esm_EMPTY_STRING.match;
 var sSlice = truncate_x_esm_EMPTY_STRING.slice;
@@ -2473,7 +2471,7 @@ var reHasComplexSymbol = new truncate_x_esm_RegExpCtr("[".concat(rsZWJ).concat(r
  */
 
 var stringSize = function _stringSize(string) {
-  if (truncate_x_esm_castBoolean(string) === false || truncate_x_esm_rxTest.call(reHasComplexSymbol, string) === false) {
+  if (to_boolean_x_esm(string) === false || truncate_x_esm_rxTest.call(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
@@ -2555,7 +2553,7 @@ var truncate_x_esm_truncate = function truncate(string, options) {
     if (sSearch.call(sSlice.call(str, end), separator)) {
       var substr = result;
 
-      if (truncate_x_esm_castBoolean(separator.global) === false) {
+      if (to_boolean_x_esm(separator.global) === false) {
         separator = new truncate_x_esm_RegExpCtr(separator.source, "".concat(to_string_symbols_supported_x_esm(rxExec.call(reFlags, separator)), "g"));
       }
 

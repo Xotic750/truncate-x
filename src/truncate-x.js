@@ -4,9 +4,8 @@ import safeToString from 'to-string-symbols-supported-x';
 import isObjectLike from 'is-object-like-x';
 import hasOwn from 'has-own-property-x';
 import arraySlice from 'array-slice-x';
+import toBoolean from 'to-boolean-x';
 
-/** @type {BooleanConstructor} */
-const castBoolean = true.constructor;
 const EMPTY_STRING = '';
 const sMatch = EMPTY_STRING.match;
 const sSlice = EMPTY_STRING.slice;
@@ -65,7 +64,7 @@ const reHasComplexSymbol = new RegExpCtr(`[${rsZWJ}${rsAstralRange}${rsComboMark
  * @returns {number} Returns the string size.
  */
 const stringSize = function _stringSize(string) {
-  if (castBoolean(string) === false || rxTest.call(reHasComplexSymbol, string) === false) {
+  if (toBoolean(string) === false || rxTest.call(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
@@ -145,7 +144,7 @@ const truncate = function truncate(string, options) {
     if (sSearch.call(sSlice.call(str, end), separator)) {
       const substr = result;
 
-      if (castBoolean(separator.global) === false) {
+      if (toBoolean(separator.global) === false) {
         separator = new RegExpCtr(separator.source, `${safeToString(rxExec.call(reFlags, separator))}g`);
       }
 
