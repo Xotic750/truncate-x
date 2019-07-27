@@ -12,8 +12,6 @@ var sSearch = EMPTY_STRING.search;
 var sIndexOf = EMPTY_STRING.indexOf;
 var sLastIndexOf = EMPTY_STRING.lastIndexOf;
 var aJoin = [].join;
-/** @type {RegExpConstructor} */
-
 var RegExpCtr = /none/.constructor;
 /* Used to match `RegExp` flags from their coerced string values. */
 

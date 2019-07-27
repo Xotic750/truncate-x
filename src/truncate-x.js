@@ -13,7 +13,6 @@ const sSearch = EMPTY_STRING.search;
 const sIndexOf = EMPTY_STRING.indexOf;
 const sLastIndexOf = EMPTY_STRING.lastIndexOf;
 const aJoin = [].join;
-/** @type {RegExpConstructor} */
 const RegExpCtr = /none/.constructor;
 
 /* Used to match `RegExp` flags from their coerced string values. */

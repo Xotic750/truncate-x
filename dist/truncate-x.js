@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-07-27T19:14:37.588Z",
+  "date": "2019-07-27T20:30:07.540Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
-  "hash": "62bcbe4367bbc40dd865",
+  "hash": "6601d59643fe8c49a89f",
   "license": "MIT",
   "version": "4.0.9"
 }
@@ -2419,8 +2419,6 @@ var sSearch = truncate_x_esm_EMPTY_STRING.search;
 var sIndexOf = truncate_x_esm_EMPTY_STRING.indexOf;
 var sLastIndexOf = truncate_x_esm_EMPTY_STRING.lastIndexOf;
 var aJoin = [].join;
-/** @type {RegExpConstructor} */
-
 var truncate_x_esm_RegExpCtr = /none/.constructor;
 /* Used to match `RegExp` flags from their coerced string values. */
 
