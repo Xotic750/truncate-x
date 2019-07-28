@@ -74,11 +74,7 @@ const stringSize = function _stringSize(string) {
 };
 
 const getOptions = function getOptions(options) {
-  const opts = {
-    length: 30,
-    omission: '...',
-    separator: null,
-  };
+  const opts = {length: 30, omission: '...', separator: null};
 
   if (isObjectLike(options)) {
     if (hasOwn(options, 'length')) {
@@ -113,6 +109,17 @@ const getConsts = function getConsts(str) {
   };
 };
 
+const getNewEnd = function getNewEnd(rxSeperator, result) {
+  let newEnd;
+  let rxMatch = rxExec.call(rxSeperator, result);
+  while (rxMatch) {
+    newEnd = rxMatch.index;
+    rxMatch = rxExec.call(rxSeperator, result);
+  }
+
+  return newEnd;
+};
+
 const getRxResult = function getRxResult(obj) {
   const {str, separator, end, result} = obj;
 
@@ -122,12 +129,7 @@ const getRxResult = function getRxResult(obj) {
       : new RegExpCtr(separator.source, `${safeToString(rxExec.call(reFlags, separator))}g`);
 
     rxSeperator.lastIndex = 0;
-    let newEnd;
-    let rxMatch = rxExec.call(rxSeperator, result);
-    while (rxMatch) {
-      newEnd = rxMatch.index;
-      rxMatch = rxExec.call(rxSeperator, result);
-    }
+    const newEnd = getNewEnd(rxSeperator, result);
 
     return slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
   }

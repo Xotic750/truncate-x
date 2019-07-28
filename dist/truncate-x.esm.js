@@ -116,6 +116,18 @@ var getConsts = function getConsts(str) {
   };
 };
 
+var getNewEnd = function getNewEnd(rxSeperator, result) {
+  var newEnd;
+  var rxMatch = rxExec.call(rxSeperator, result);
+
+  while (rxMatch) {
+    newEnd = rxMatch.index;
+    rxMatch = rxExec.call(rxSeperator, result);
+  }
+
+  return newEnd;
+};
+
 var getRxResult = function getRxResult(obj) {
   var str = obj.str,
       separator = obj.separator,
@@ -125,14 +137,7 @@ var getRxResult = function getRxResult(obj) {
   if (search.call(slice.call(str, end), separator)) {
     var rxSeperator = toBoolean(separator.global) ? separator : new RegExpCtr(separator.source, "".concat(safeToString(rxExec.call(reFlags, separator)), "g"));
     rxSeperator.lastIndex = 0;
-    var newEnd;
-    var rxMatch = rxExec.call(rxSeperator, result);
-
-    while (rxMatch) {
-      newEnd = rxMatch.index;
-      rxMatch = rxExec.call(rxSeperator, result);
-    }
-
+    var newEnd = getNewEnd(rxSeperator, result);
     return slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
   }
 

@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-07-28T20:06:20.778Z",
+  "date": "2019-07-28T20:23:28.700Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
-  "hash": "c4d5301f99b4c8b31378",
+  "hash": "861f45b5f60ec517b715",
   "license": "MIT",
   "version": "4.0.9"
 }
@@ -2523,6 +2523,18 @@ var getConsts = function getConsts(str) {
   };
 };
 
+var getNewEnd = function getNewEnd(rxSeperator, result) {
+  var newEnd;
+  var rxMatch = rxExec.call(rxSeperator, result);
+
+  while (rxMatch) {
+    newEnd = rxMatch.index;
+    rxMatch = rxExec.call(rxSeperator, result);
+  }
+
+  return newEnd;
+};
+
 var truncate_x_esm_getRxResult = function getRxResult(obj) {
   var str = obj.str,
       separator = obj.separator,
@@ -2532,14 +2544,7 @@ var truncate_x_esm_getRxResult = function getRxResult(obj) {
   if (search.call(truncate_x_esm_slice.call(str, end), separator)) {
     var rxSeperator = to_boolean_x_esm(separator.global) ? separator : new truncate_x_esm_RegExpCtr(separator.source, "".concat(to_string_symbols_supported_x_esm(rxExec.call(reFlags, separator)), "g"));
     rxSeperator.lastIndex = 0;
-    var newEnd;
-    var rxMatch = rxExec.call(rxSeperator, result);
-
-    while (rxMatch) {
-      newEnd = rxMatch.index;
-      rxMatch = rxExec.call(rxSeperator, result);
-    }
-
+    var newEnd = getNewEnd(rxSeperator, result);
     return truncate_x_esm_slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
   }
 
