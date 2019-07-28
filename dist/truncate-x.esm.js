@@ -5,12 +5,13 @@ import isObjectLike from 'is-object-like-x';
 import hasOwn from 'has-own-property-x';
 import arraySlice from 'array-slice-x';
 import toBoolean from 'to-boolean-x';
+import isNil from 'is-nil-x';
 var EMPTY_STRING = '';
-var sMatch = EMPTY_STRING.match;
-var sSlice = EMPTY_STRING.slice;
-var sSearch = EMPTY_STRING.search;
-var sIndexOf = EMPTY_STRING.indexOf;
-var sLastIndexOf = EMPTY_STRING.lastIndexOf;
+var match = EMPTY_STRING.match,
+    slice = EMPTY_STRING.slice,
+    search = EMPTY_STRING.search,
+    indexOf = EMPTY_STRING.indexOf,
+    lastIndexOf = EMPTY_STRING.lastIndexOf;
 var aJoin = [].join;
 var RegExpCtr = /none/.constructor;
 /* Used to match `RegExp` flags from their coerced string values. */
@@ -75,6 +76,94 @@ var stringSize = function _stringSize(string) {
 
   return result;
 };
+
+var getOptions = function getOptions(options) {
+  var opts = {
+    length: 30,
+    omission: '...',
+    separator: null
+  };
+
+  if (isObjectLike(options)) {
+    if (hasOwn(options, 'length')) {
+      opts.length = toLength(options.length);
+    }
+
+    if (hasOwn(options, 'omission')) {
+      opts.omission = options.omission;
+    }
+
+    if (hasOwn(options, 'separator')) {
+      opts.separator = options.separator;
+    }
+  }
+
+  return opts;
+};
+
+var getConsts = function getConsts(str) {
+  if (rxTest.call(reHasComplexSymbol, str)) {
+    var matchSymbols = match.call(str, reComplexSymbol);
+    return {
+      matchSymbols: match.call(str, reComplexSymbol),
+      strLength: matchSymbols.length
+    };
+  }
+
+  return {
+    matchSymbols: null,
+    strLength: str.length
+  };
+};
+
+var getRxResult = function getRxResult(obj) {
+  var str = obj.str,
+      separator = obj.separator,
+      end = obj.end,
+      result = obj.result;
+
+  if (search.call(slice.call(str, end), separator)) {
+    var rxSeperator = toBoolean(separator.global) ? separator : new RegExpCtr(separator.source, "".concat(safeToString(rxExec.call(reFlags, separator)), "g"));
+    rxSeperator.lastIndex = 0;
+    var newEnd;
+    var rxMatch = rxExec.call(rxSeperator, result);
+
+    while (rxMatch) {
+      newEnd = rxMatch.index;
+      rxMatch = rxExec.call(rxSeperator, result);
+    }
+
+    return slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
+  }
+
+  return result;
+};
+
+var getResult = function getResult(obj) {
+  var str = obj.str,
+      separator = obj.separator,
+      end = obj.end,
+      result = obj.result;
+
+  if (isRegExp(separator)) {
+    return getRxResult({
+      str: str,
+      separator: separator,
+      end: end,
+      result: result
+    });
+  }
+
+  if (indexOf.call(str, separator, end) !== end) {
+    var index = lastIndexOf.call(result, separator);
+
+    if (index > -1) {
+      return slice.call(result, 0, index);
+    }
+  }
+
+  return result;
+};
 /**
  * Truncates `string` if it's longer than the given maximum string length.
  * The last characters of the truncated string are replaced with the omission
@@ -93,32 +182,15 @@ var stringSize = function _stringSize(string) {
 
 var truncate = function truncate(string, options) {
   var str = safeToString(string);
-  var length = 30;
-  var omission = '...';
-  var separator;
 
-  if (isObjectLike(options)) {
-    if (hasOwn(options, 'separator')) {
-      /* eslint-disable-next-line prefer-destructuring */
-      separator = options.separator;
-    }
+  var _getOptions = getOptions(options),
+      length = _getOptions.length,
+      omission = _getOptions.omission,
+      separator = _getOptions.separator;
 
-    if (hasOwn(options, 'length')) {
-      length = toLength(options.length);
-    }
-
-    if (hasOwn(options, 'omission')) {
-      omission = safeToString(options.omission);
-    }
-  }
-
-  var strLength = str.length;
-  var matchSymbols;
-
-  if (rxTest.call(reHasComplexSymbol, str)) {
-    matchSymbols = sMatch.call(str, reComplexSymbol);
-    strLength = matchSymbols.length;
-  }
+  var _getConsts = getConsts(str),
+      strLength = _getConsts.strLength,
+      matchSymbols = _getConsts.matchSymbols;
 
   if (length >= strLength) {
     return str;
@@ -130,44 +202,20 @@ var truncate = function truncate(string, options) {
     return omission;
   }
 
-  var result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : sSlice.call(str, 0, end);
+  var result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : slice.call(str, 0, end);
 
-  if (typeof separator === 'undefined') {
+  if (isNil(separator)) {
     return result + omission;
   }
 
-  if (matchSymbols) {
-    end += result.length - end;
-  }
-
-  if (isRegExp(separator)) {
-    if (sSearch.call(sSlice.call(str, end), separator)) {
-      var substr = result;
-
-      if (toBoolean(separator.global) === false) {
-        separator = new RegExpCtr(separator.source, "".concat(safeToString(rxExec.call(reFlags, separator)), "g"));
-      }
-
-      separator.lastIndex = 0;
-      var newEnd;
-      var match = rxExec.call(separator, substr);
-
-      while (match) {
-        newEnd = match.index;
-        match = rxExec.call(separator, substr);
-      }
-
-      result = sSlice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
-    }
-  } else if (sIndexOf.call(str, separator, end) !== end) {
-    var index = sLastIndexOf.call(result, separator);
-
-    if (index > -1) {
-      result = sSlice.call(result, 0, index);
-    }
-  }
-
-  return result + omission;
+  var secondEnd = matchSymbols ? result.length : end;
+  var secondResult = getResult({
+    str: str,
+    separator: separator,
+    end: secondEnd,
+    result: result
+  });
+  return secondResult + omission;
 };
 
 export default truncate;

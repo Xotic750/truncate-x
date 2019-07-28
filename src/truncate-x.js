@@ -5,13 +5,10 @@ import isObjectLike from 'is-object-like-x';
 import hasOwn from 'has-own-property-x';
 import arraySlice from 'array-slice-x';
 import toBoolean from 'to-boolean-x';
+import isNil from 'is-nil-x';
 
 const EMPTY_STRING = '';
-const sMatch = EMPTY_STRING.match;
-const sSlice = EMPTY_STRING.slice;
-const sSearch = EMPTY_STRING.search;
-const sIndexOf = EMPTY_STRING.indexOf;
-const sLastIndexOf = EMPTY_STRING.lastIndexOf;
+const {match, slice, search, indexOf, lastIndexOf} = EMPTY_STRING;
 const aJoin = [].join;
 const RegExpCtr = /none/.constructor;
 
@@ -76,6 +73,86 @@ const stringSize = function _stringSize(string) {
   return result;
 };
 
+const getOptions = function getOptions(options) {
+  const opts = {
+    length: 30,
+    omission: '...',
+    separator: null,
+  };
+
+  if (isObjectLike(options)) {
+    if (hasOwn(options, 'length')) {
+      opts.length = toLength(options.length);
+    }
+
+    if (hasOwn(options, 'omission')) {
+      opts.omission = options.omission;
+    }
+
+    if (hasOwn(options, 'separator')) {
+      opts.separator = options.separator;
+    }
+  }
+
+  return opts;
+};
+
+const getConsts = function getConsts(str) {
+  if (rxTest.call(reHasComplexSymbol, str)) {
+    const matchSymbols = match.call(str, reComplexSymbol);
+
+    return {
+      matchSymbols: match.call(str, reComplexSymbol),
+      strLength: matchSymbols.length,
+    };
+  }
+
+  return {
+    matchSymbols: null,
+    strLength: str.length,
+  };
+};
+
+const getRxResult = function getRxResult(obj) {
+  const {str, separator, end, result} = obj;
+
+  if (search.call(slice.call(str, end), separator)) {
+    const rxSeperator = toBoolean(separator.global)
+      ? separator
+      : new RegExpCtr(separator.source, `${safeToString(rxExec.call(reFlags, separator))}g`);
+
+    rxSeperator.lastIndex = 0;
+    let newEnd;
+    let rxMatch = rxExec.call(rxSeperator, result);
+    while (rxMatch) {
+      newEnd = rxMatch.index;
+      rxMatch = rxExec.call(rxSeperator, result);
+    }
+
+    return slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
+  }
+
+  return result;
+};
+
+const getResult = function getResult(obj) {
+  const {str, separator, end, result} = obj;
+
+  if (isRegExp(separator)) {
+    return getRxResult({str, separator, end, result});
+  }
+
+  if (indexOf.call(str, separator, end) !== end) {
+    const index = lastIndexOf.call(result, separator);
+
+    if (index > -1) {
+      return slice.call(result, 0, index);
+    }
+  }
+
+  return result;
+};
+
 /**
  * Truncates `string` if it's longer than the given maximum string length.
  * The last characters of the truncated string are replaced with the omission
@@ -92,80 +169,29 @@ const stringSize = function _stringSize(string) {
  */
 const truncate = function truncate(string, options) {
   const str = safeToString(string);
-  let length = 30;
-  let omission = '...';
-  let separator;
-
-  if (isObjectLike(options)) {
-    if (hasOwn(options, 'separator')) {
-      /* eslint-disable-next-line prefer-destructuring */
-      separator = options.separator;
-    }
-
-    if (hasOwn(options, 'length')) {
-      length = toLength(options.length);
-    }
-
-    if (hasOwn(options, 'omission')) {
-      omission = safeToString(options.omission);
-    }
-  }
-
-  let strLength = str.length;
-  let matchSymbols;
-
-  if (rxTest.call(reHasComplexSymbol, str)) {
-    matchSymbols = sMatch.call(str, reComplexSymbol);
-    strLength = matchSymbols.length;
-  }
+  const {length, omission, separator} = getOptions(options);
+  const {strLength, matchSymbols} = getConsts(str);
 
   if (length >= strLength) {
     return str;
   }
 
-  let end = length - stringSize(omission);
+  const end = length - stringSize(omission);
 
   if (end < 1) {
     return omission;
   }
 
-  let result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : sSlice.call(str, 0, end);
+  const result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : slice.call(str, 0, end);
 
-  if (typeof separator === 'undefined') {
+  if (isNil(separator)) {
     return result + omission;
   }
 
-  if (matchSymbols) {
-    end += result.length - end;
-  }
+  const secondEnd = matchSymbols ? result.length : end;
+  const secondResult = getResult({str, separator, end: secondEnd, result});
 
-  if (isRegExp(separator)) {
-    if (sSearch.call(sSlice.call(str, end), separator)) {
-      const substr = result;
-
-      if (toBoolean(separator.global) === false) {
-        separator = new RegExpCtr(separator.source, `${safeToString(rxExec.call(reFlags, separator))}g`);
-      }
-
-      separator.lastIndex = 0;
-      let newEnd;
-      let match = rxExec.call(separator, substr);
-      while (match) {
-        newEnd = match.index;
-        match = rxExec.call(separator, substr);
-      }
-
-      result = sSlice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
-    }
-  } else if (sIndexOf.call(str, separator, end) !== end) {
-    const index = sLastIndexOf.call(result, separator);
-
-    if (index > -1) {
-      result = sSlice.call(result, 0, index);
-    }
-  }
-
-  return result + omission;
+  return secondResult + omission;
 };
 
 export default truncate;

@@ -52,6 +52,7 @@
   "dependencies": {
     "array-slice-x": "^4.0.25",
     "has-own-property-x": "^4.0.16",
+    "is-nil-x": "^2.0.25",
     "is-object-like-x": "^2.0.25",
     "is-regexp-x": "^3.0.17",
     "to-boolean-x": "^2.0.24",

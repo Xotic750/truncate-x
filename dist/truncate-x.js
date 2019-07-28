@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-07-27T22:18:22.867Z",
+  "date": "2019-07-28T20:06:20.778Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
-  "hash": "6601d59643fe8c49a89f",
+  "hash": "c4d5301f99b4c8b31378",
   "license": "MIT",
   "version": "4.0.9"
 }
@@ -2412,12 +2412,13 @@ var array_slice_x_esm_slice = function slice(array, start, end) {
 
 
 
+
 var truncate_x_esm_EMPTY_STRING = '';
-var sMatch = truncate_x_esm_EMPTY_STRING.match;
-var sSlice = truncate_x_esm_EMPTY_STRING.slice;
-var sSearch = truncate_x_esm_EMPTY_STRING.search;
-var sIndexOf = truncate_x_esm_EMPTY_STRING.indexOf;
-var sLastIndexOf = truncate_x_esm_EMPTY_STRING.lastIndexOf;
+var match = truncate_x_esm_EMPTY_STRING.match,
+    truncate_x_esm_slice = truncate_x_esm_EMPTY_STRING.slice,
+    search = truncate_x_esm_EMPTY_STRING.search,
+    indexOf = truncate_x_esm_EMPTY_STRING.indexOf,
+    lastIndexOf = truncate_x_esm_EMPTY_STRING.lastIndexOf;
 var aJoin = [].join;
 var truncate_x_esm_RegExpCtr = /none/.constructor;
 /* Used to match `RegExp` flags from their coerced string values. */
@@ -2482,6 +2483,94 @@ var stringSize = function _stringSize(string) {
 
   return result;
 };
+
+var truncate_x_esm_getOptions = function getOptions(options) {
+  var opts = {
+    length: 30,
+    omission: '...',
+    separator: null
+  };
+
+  if (is_object_like_x_esm(options)) {
+    if (has_own_property_x_esm(options, 'length')) {
+      opts.length = to_length_x_esm(options.length);
+    }
+
+    if (has_own_property_x_esm(options, 'omission')) {
+      opts.omission = options.omission;
+    }
+
+    if (has_own_property_x_esm(options, 'separator')) {
+      opts.separator = options.separator;
+    }
+  }
+
+  return opts;
+};
+
+var getConsts = function getConsts(str) {
+  if (truncate_x_esm_rxTest.call(reHasComplexSymbol, str)) {
+    var matchSymbols = match.call(str, reComplexSymbol);
+    return {
+      matchSymbols: match.call(str, reComplexSymbol),
+      strLength: matchSymbols.length
+    };
+  }
+
+  return {
+    matchSymbols: null,
+    strLength: str.length
+  };
+};
+
+var truncate_x_esm_getRxResult = function getRxResult(obj) {
+  var str = obj.str,
+      separator = obj.separator,
+      end = obj.end,
+      result = obj.result;
+
+  if (search.call(truncate_x_esm_slice.call(str, end), separator)) {
+    var rxSeperator = to_boolean_x_esm(separator.global) ? separator : new truncate_x_esm_RegExpCtr(separator.source, "".concat(to_string_symbols_supported_x_esm(rxExec.call(reFlags, separator)), "g"));
+    rxSeperator.lastIndex = 0;
+    var newEnd;
+    var rxMatch = rxExec.call(rxSeperator, result);
+
+    while (rxMatch) {
+      newEnd = rxMatch.index;
+      rxMatch = rxExec.call(rxSeperator, result);
+    }
+
+    return truncate_x_esm_slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
+  }
+
+  return result;
+};
+
+var truncate_x_esm_getResult = function getResult(obj) {
+  var str = obj.str,
+      separator = obj.separator,
+      end = obj.end,
+      result = obj.result;
+
+  if (is_regexp_x_esm(separator)) {
+    return truncate_x_esm_getRxResult({
+      str: str,
+      separator: separator,
+      end: end,
+      result: result
+    });
+  }
+
+  if (indexOf.call(str, separator, end) !== end) {
+    var index = lastIndexOf.call(result, separator);
+
+    if (index > -1) {
+      return truncate_x_esm_slice.call(result, 0, index);
+    }
+  }
+
+  return result;
+};
 /**
  * Truncates `string` if it's longer than the given maximum string length.
  * The last characters of the truncated string are replaced with the omission
@@ -2500,32 +2589,15 @@ var stringSize = function _stringSize(string) {
 
 var truncate_x_esm_truncate = function truncate(string, options) {
   var str = to_string_symbols_supported_x_esm(string);
-  var length = 30;
-  var omission = '...';
-  var separator;
 
-  if (is_object_like_x_esm(options)) {
-    if (has_own_property_x_esm(options, 'separator')) {
-      /* eslint-disable-next-line prefer-destructuring */
-      separator = options.separator;
-    }
+  var _getOptions = truncate_x_esm_getOptions(options),
+      length = _getOptions.length,
+      omission = _getOptions.omission,
+      separator = _getOptions.separator;
 
-    if (has_own_property_x_esm(options, 'length')) {
-      length = to_length_x_esm(options.length);
-    }
-
-    if (has_own_property_x_esm(options, 'omission')) {
-      omission = to_string_symbols_supported_x_esm(options.omission);
-    }
-  }
-
-  var strLength = str.length;
-  var matchSymbols;
-
-  if (truncate_x_esm_rxTest.call(reHasComplexSymbol, str)) {
-    matchSymbols = sMatch.call(str, reComplexSymbol);
-    strLength = matchSymbols.length;
-  }
+  var _getConsts = getConsts(str),
+      strLength = _getConsts.strLength,
+      matchSymbols = _getConsts.matchSymbols;
 
   if (length >= strLength) {
     return str;
@@ -2537,44 +2609,20 @@ var truncate_x_esm_truncate = function truncate(string, options) {
     return omission;
   }
 
-  var result = matchSymbols ? aJoin.call(array_slice_x_esm(matchSymbols, 0, end), truncate_x_esm_EMPTY_STRING) : sSlice.call(str, 0, end);
+  var result = matchSymbols ? aJoin.call(array_slice_x_esm(matchSymbols, 0, end), truncate_x_esm_EMPTY_STRING) : truncate_x_esm_slice.call(str, 0, end);
 
-  if (typeof separator === 'undefined') {
+  if (is_nil_x_esm(separator)) {
     return result + omission;
   }
 
-  if (matchSymbols) {
-    end += result.length - end;
-  }
-
-  if (is_regexp_x_esm(separator)) {
-    if (sSearch.call(sSlice.call(str, end), separator)) {
-      var substr = result;
-
-      if (to_boolean_x_esm(separator.global) === false) {
-        separator = new truncate_x_esm_RegExpCtr(separator.source, "".concat(to_string_symbols_supported_x_esm(rxExec.call(reFlags, separator)), "g"));
-      }
-
-      separator.lastIndex = 0;
-      var newEnd;
-      var match = rxExec.call(separator, substr);
-
-      while (match) {
-        newEnd = match.index;
-        match = rxExec.call(separator, substr);
-      }
-
-      result = sSlice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
-    }
-  } else if (sIndexOf.call(str, separator, end) !== end) {
-    var index = sLastIndexOf.call(result, separator);
-
-    if (index > -1) {
-      result = sSlice.call(result, 0, index);
-    }
-  }
-
-  return result + omission;
+  var secondEnd = matchSymbols ? result.length : end;
+  var secondResult = truncate_x_esm_getResult({
+    str: str,
+    separator: separator,
+    end: secondEnd,
+    result: result
+  });
+  return secondResult + omission;
 };
 
 /* harmony default export */ var truncate_x_esm = __webpack_exports__["default"] = (truncate_x_esm_truncate);
