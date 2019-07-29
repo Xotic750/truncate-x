@@ -2,7 +2,7 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-07-28T20:23:28.700Z",
+  "date": "2019-07-29T20:20:44.927Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
