@@ -6,19 +6,20 @@ import hasOwn from 'has-own-property-x';
 import arraySlice from 'array-slice-x';
 import toBoolean from 'to-boolean-x';
 import isNil from 'is-nil-x';
+import methodize from 'simple-methodize-x';
 var EMPTY_STRING = '';
-var match = EMPTY_STRING.match,
-    slice = EMPTY_STRING.slice,
-    search = EMPTY_STRING.search,
-    indexOf = EMPTY_STRING.indexOf,
-    lastIndexOf = EMPTY_STRING.lastIndexOf;
-var aJoin = [].join;
-var RegExpCtr = /none/.constructor;
+var match = methodize(EMPTY_STRING.match);
+var slice = methodize(EMPTY_STRING.slice);
+var search = methodize(EMPTY_STRING.search);
+var indexOf = methodize(EMPTY_STRING.indexOf);
+var lastIndexOf = methodize(EMPTY_STRING.lastIndexOf);
+var aJoin = methodize([].join);
 /* Used to match `RegExp` flags from their coerced string values. */
 
 var reFlags = /\w*$/;
-var rxTest = reFlags.test;
-var rxExec = reFlags.exec;
+var RegExpCtr = reFlags.constructor;
+var rxTest = methodize(reFlags.test);
+var rxExec = methodize(reFlags.exec);
 /* Used to compose unicode character classes. */
 
 var rsAstralRange = "\\ud800-\\udfff";
@@ -39,9 +40,9 @@ var rsZWJ = "\\u200d";
 
 var reOptMod = "".concat(rsModifier, "?");
 var rsOptVar = "[".concat(rsVarRange, "]?");
-var rsOptJoin = "(?:".concat(rsZWJ, "(?:").concat(aJoin.call([rsNonAstral, rsRegional, rsSurrPair], '|'), ")").concat(rsOptVar).concat(reOptMod, ")*");
+var rsOptJoin = "(?:".concat(rsZWJ, "(?:").concat(aJoin([rsNonAstral, rsRegional, rsSurrPair], '|'), ")").concat(rsOptVar).concat(reOptMod, ")*");
 var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = "(?:".concat(aJoin.call(["".concat(rsNonAstral + rsCombo, "?"), rsCombo, rsRegional, rsSurrPair, rsAstral], '|'), ")");
+var rsSymbol = "(?:".concat(aJoin(["".concat(rsNonAstral + rsCombo, "?"), rsCombo, rsRegional, rsSurrPair, rsAstral], '|'), ")");
 /*
  * Used to match string symbols
  * @see https://mathiasbynens.be/notes/javascript-unicode
@@ -63,14 +64,14 @@ var reHasComplexSymbol = new RegExpCtr("[".concat(rsZWJ).concat(rsAstralRange).c
  */
 
 var stringSize = function _stringSize(string) {
-  if (toBoolean(string) === false || rxTest.call(reHasComplexSymbol, string) === false) {
+  if (toBoolean(string) === false || rxTest(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
   reComplexSymbol.lastIndex = 0;
   var result = 0;
 
-  while (rxTest.call(reComplexSymbol, string)) {
+  while (rxTest(reComplexSymbol, string)) {
     result += 1;
   }
 
@@ -102,10 +103,10 @@ var getOptions = function getOptions(options) {
 };
 
 var getConsts = function getConsts(str) {
-  if (rxTest.call(reHasComplexSymbol, str)) {
-    var matchSymbols = match.call(str, reComplexSymbol);
+  if (rxTest(reHasComplexSymbol, str)) {
+    var matchSymbols = match(str, reComplexSymbol);
     return {
-      matchSymbols: match.call(str, reComplexSymbol),
+      matchSymbols: match(str, reComplexSymbol),
       strLength: matchSymbols.length
     };
   }
@@ -118,11 +119,11 @@ var getConsts = function getConsts(str) {
 
 var getNewEnd = function getNewEnd(rxSeperator, result) {
   var newEnd;
-  var rxMatch = rxExec.call(rxSeperator, result);
+  var rxMatch = rxExec(rxSeperator, result);
 
   while (rxMatch) {
     newEnd = rxMatch.index;
-    rxMatch = rxExec.call(rxSeperator, result);
+    rxMatch = rxExec(rxSeperator, result);
   }
 
   return newEnd;
@@ -134,11 +135,11 @@ var getRxResult = function getRxResult(obj) {
       end = obj.end,
       result = obj.result;
 
-  if (search.call(slice.call(str, end), separator)) {
-    var rxSeperator = toBoolean(separator.global) ? separator : new RegExpCtr(separator.source, "".concat(safeToString(rxExec.call(reFlags, separator)), "g"));
+  if (search(slice(str, end), separator)) {
+    var rxSeperator = toBoolean(separator.global) ? separator : new RegExpCtr(separator.source, "".concat(safeToString(rxExec(reFlags, separator)), "g"));
     rxSeperator.lastIndex = 0;
     var newEnd = getNewEnd(rxSeperator, result);
-    return slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
+    return slice(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
   }
 
   return result;
@@ -159,11 +160,11 @@ var getResult = function getResult(obj) {
     });
   }
 
-  if (indexOf.call(str, separator, end) !== end) {
-    var index = lastIndexOf.call(result, separator);
+  if (indexOf(str, separator, end) !== end) {
+    var index = lastIndexOf(result, separator);
 
     if (index > -1) {
-      return slice.call(result, 0, index);
+      return slice(result, 0, index);
     }
   }
 
@@ -207,20 +208,18 @@ var truncate = function truncate(string, options) {
     return omission;
   }
 
-  var result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : slice.call(str, 0, end);
+  var result = matchSymbols ? aJoin(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : slice(str, 0, end);
 
   if (isNil(separator)) {
     return result + omission;
   }
 
-  var secondEnd = matchSymbols ? result.length : end;
-  var secondResult = getResult({
+  return getResult({
     str: str,
     separator: separator,
-    end: secondEnd,
+    end: matchSymbols ? result.length : end,
     result: result
-  });
-  return secondResult + omission;
+  }) + omission;
 };
 
 export default truncate;

@@ -6,16 +6,21 @@ import hasOwn from 'has-own-property-x';
 import arraySlice from 'array-slice-x';
 import toBoolean from 'to-boolean-x';
 import isNil from 'is-nil-x';
+import methodize from 'simple-methodize-x';
 
 const EMPTY_STRING = '';
-const {match, slice, search, indexOf, lastIndexOf} = EMPTY_STRING;
-const aJoin = [].join;
-const RegExpCtr = /none/.constructor;
+const match = methodize(EMPTY_STRING.match);
+const slice = methodize(EMPTY_STRING.slice);
+const search = methodize(EMPTY_STRING.search);
+const indexOf = methodize(EMPTY_STRING.indexOf);
+const lastIndexOf = methodize(EMPTY_STRING.lastIndexOf);
+const aJoin = methodize([].join);
 
 /* Used to match `RegExp` flags from their coerced string values. */
 const reFlags = /\w*$/;
-const rxTest = reFlags.test;
-const rxExec = reFlags.exec;
+const RegExpCtr = reFlags.constructor;
+const rxTest = methodize(reFlags.test);
+const rxExec = methodize(reFlags.exec);
 
 /* Used to compose unicode character classes. */
 const rsAstralRange = '\\ud800-\\udfff';
@@ -36,9 +41,9 @@ const rsZWJ = '\\u200d';
 /* Used to compose unicode regexes. */
 const reOptMod = `${rsModifier}?`;
 const rsOptVar = `[${rsVarRange}]?`;
-const rsOptJoin = `(?:${rsZWJ}(?:${aJoin.call([rsNonAstral, rsRegional, rsSurrPair], '|')})${rsOptVar}${reOptMod})*`;
+const rsOptJoin = `(?:${rsZWJ}(?:${aJoin([rsNonAstral, rsRegional, rsSurrPair], '|')})${rsOptVar}${reOptMod})*`;
 const rsSeq = rsOptVar + reOptMod + rsOptJoin;
-const rsSymbol = `(?:${aJoin.call([`${rsNonAstral + rsCombo}?`, rsCombo, rsRegional, rsSurrPair, rsAstral], '|')})`;
+const rsSymbol = `(?:${aJoin([`${rsNonAstral + rsCombo}?`, rsCombo, rsRegional, rsSurrPair, rsAstral], '|')})`;
 
 /*
  * Used to match string symbols
@@ -60,13 +65,13 @@ const reHasComplexSymbol = new RegExpCtr(`[${rsZWJ}${rsAstralRange}${rsComboMark
  * @returns {number} Returns the string size.
  */
 const stringSize = function _stringSize(string) {
-  if (toBoolean(string) === false || rxTest.call(reHasComplexSymbol, string) === false) {
+  if (toBoolean(string) === false || rxTest(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
   reComplexSymbol.lastIndex = 0;
   let result = 0;
-  while (rxTest.call(reComplexSymbol, string)) {
+  while (rxTest(reComplexSymbol, string)) {
     result += 1;
   }
 
@@ -94,11 +99,11 @@ const getOptions = function getOptions(options) {
 };
 
 const getConsts = function getConsts(str) {
-  if (rxTest.call(reHasComplexSymbol, str)) {
-    const matchSymbols = match.call(str, reComplexSymbol);
+  if (rxTest(reHasComplexSymbol, str)) {
+    const matchSymbols = match(str, reComplexSymbol);
 
     return {
-      matchSymbols: match.call(str, reComplexSymbol),
+      matchSymbols: match(str, reComplexSymbol),
       strLength: matchSymbols.length,
     };
   }
@@ -111,10 +116,10 @@ const getConsts = function getConsts(str) {
 
 const getNewEnd = function getNewEnd(rxSeperator, result) {
   let newEnd;
-  let rxMatch = rxExec.call(rxSeperator, result);
+  let rxMatch = rxExec(rxSeperator, result);
   while (rxMatch) {
     newEnd = rxMatch.index;
-    rxMatch = rxExec.call(rxSeperator, result);
+    rxMatch = rxExec(rxSeperator, result);
   }
 
   return newEnd;
@@ -123,15 +128,15 @@ const getNewEnd = function getNewEnd(rxSeperator, result) {
 const getRxResult = function getRxResult(obj) {
   const {str, separator, end, result} = obj;
 
-  if (search.call(slice.call(str, end), separator)) {
+  if (search(slice(str, end), separator)) {
     const rxSeperator = toBoolean(separator.global)
       ? separator
-      : new RegExpCtr(separator.source, `${safeToString(rxExec.call(reFlags, separator))}g`);
+      : new RegExpCtr(separator.source, `${safeToString(rxExec(reFlags, separator))}g`);
 
     rxSeperator.lastIndex = 0;
     const newEnd = getNewEnd(rxSeperator, result);
 
-    return slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
+    return slice(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
   }
 
   return result;
@@ -144,11 +149,11 @@ const getResult = function getResult(obj) {
     return getRxResult({str, separator, end, result});
   }
 
-  if (indexOf.call(str, separator, end) !== end) {
-    const index = lastIndexOf.call(result, separator);
+  if (indexOf(str, separator, end) !== end) {
+    const index = lastIndexOf(result, separator);
 
     if (index > -1) {
-      return slice.call(result, 0, index);
+      return slice(result, 0, index);
     }
   }
 
@@ -184,16 +189,13 @@ const truncate = function truncate(string, options) {
     return omission;
   }
 
-  const result = matchSymbols ? aJoin.call(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : slice.call(str, 0, end);
+  const result = matchSymbols ? aJoin(arraySlice(matchSymbols, 0, end), EMPTY_STRING) : slice(str, 0, end);
 
   if (isNil(separator)) {
     return result + omission;
   }
 
-  const secondEnd = matchSymbols ? result.length : end;
-  const secondResult = getResult({str, separator, end: secondEnd, result});
-
-  return secondResult + omission;
+  return getResult({str, separator, end: matchSymbols ? result.length : end, result}) + omission;
 };
 
 export default truncate;

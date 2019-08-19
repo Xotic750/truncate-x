@@ -2,11 +2,11 @@
 {
   "author": "Graham Fairweather",
   "copywrite": "Copyright (c) 2017-present",
-  "date": "2019-08-15T20:57:28.869Z",
+  "date": "2019-08-19T15:54:46.774Z",
   "describe": "",
   "description": "Truncate a string to a maximum specified length.",
   "file": "truncate-x.js",
-  "hash": "264f26c09dd390dad763",
+  "hash": "6754160ea03903a04931",
   "license": "MIT",
   "version": "4.1.0"
 }
@@ -2478,6 +2478,294 @@ var array_slice_x_esm_slice = function slice(array, start, end) {
 /* harmony default export */ var array_slice_x_esm = (array_slice_x_esm_slice);
 
 
+// CONCATENATED MODULE: ./node_modules/is-primitive-x/dist/is-primitive-x.esm.js
+function is_primitive_x_esm_typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { is_primitive_x_esm_typeof = function _typeof(obj) { return typeof obj; }; } else { is_primitive_x_esm_typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return is_primitive_x_esm_typeof(obj); }
+
+/**
+ * Returns true if the value is a primitive.
+ *
+ * @param {*} [val] - The value to test.
+ * @returns {boolean} True if a primitive, otherwise false..
+ */
+var isPrimitive = function isPrimitive(val) {
+  return is_primitive_x_esm_typeof(val) === 'object' ? val === null : typeof val !== 'function';
+};
+
+/* harmony default export */ var is_primitive_x_esm = (isPrimitive);
+
+
+// CONCATENATED MODULE: ./node_modules/util-pusher-x/dist/util-pusher-x.esm.js
+
+
+var util_pusher_x_esm_EMPTY_STRING = '';
+var split = util_pusher_x_esm_EMPTY_STRING.split;
+var splitter = [util_pusher_x_esm_EMPTY_STRING];
+
+var util_pusher_x_esm_getIterable = function getIterable(arrayLike) {
+  // noinspection JSUnresolvedFunction
+  return is_string_default()(arrayLike) ? split.apply(arrayLike, splitter) : arrayLike;
+}; // eslint-disable jsdoc/no-undefined-types
+// noinspection JSCommentMatchesSignature
+
+/**
+ * This pushes or concatenates into a new or existing array.
+ *
+ * @param {Array} arrayLike - The source.
+ * @param {number} [from=0] - The from source index.
+ * @param {Array} [target=[]] - The target array.
+ * @returns {*} The target array.
+ */
+// eslint-enable jsdoc/no-undefined-types
+
+
+var util_pusher_x_esm_pusher = function pusher(arrayLike, from) {
+  /* eslint-disable-next-line prefer-rest-params */
+  var target = arguments.length > 2 ? arguments[2] : [];
+
+  if (typeof arrayLike !== 'string' && is_primitive_x_esm(arrayLike)) {
+    return target;
+  }
+
+  var iterable = util_pusher_x_esm_getIterable(arrayLike);
+  var length = iterable.length;
+
+  for (var i = from || 0; i < length; i += 1) {
+    target[target.length] = arrayLike[i];
+  }
+
+  return target;
+};
+
+/* harmony default export */ var util_pusher_x_esm = (util_pusher_x_esm_pusher);
+
+
+// CONCATENATED MODULE: ./node_modules/simple-bind-x/dist/simple-bind-x.esm.js
+function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
+
+function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
+
+function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
+
+function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+
+
+var simple_bind_x_esm_ERROR_MESSAGE = 'bind called on incompatible ';
+var simple_bind_x_esm_object = {};
+var simple_bind_x_esm_ObjectCtr = simple_bind_x_esm_object.constructor;
+var simple_bind_x_esm_toStringTag = simple_bind_x_esm_object.toString;
+var funcType = '[object Function]';
+var simple_bind_x_esm_ZERO = 0;
+var argsOffset = 2;
+
+var simple_bind_x_esm_getMax = function getMax(a, b) {
+  return a >= b ? a : b;
+};
+
+var simple_bind_x_esm_assertIsFunction = function assertIsFunction(value) {
+  if (typeof value !== 'function' && simple_bind_x_esm_toStringTag.apply(value) !== funcType) {
+    throw new TypeError(simple_bind_x_esm_ERROR_MESSAGE + value);
+  }
+};
+
+var boundFns = [function zero(binder) {
+  return function boundFn() {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments));
+  };
+}, function one(binder, boundLength) {
+  return function boundFn(a) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a]));
+  };
+}, function two(binder, boundLength) {
+  return function boundFn(a, b) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b]));
+  };
+}, function three(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c]));
+  };
+}, function four(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d]));
+  };
+}, function five(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e]));
+  };
+}, function six(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e, f) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e, f]));
+  };
+}, function seven(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e, f, g) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e, f, g]));
+  };
+}, function eight(binder, boundLength) {
+  /* eslint-disable-next-line max-params */
+  return function boundFn(a, b, c, d, e, f, g, h) {
+    /* eslint-disable-next-line babel/no-invalid-this,prefer-rest-params */
+    return binder.apply(this, util_pusher_x_esm(arguments, boundLength, [a, b, c, d, e, f, g, h]));
+  };
+}];
+
+var getBoundFn = function getBoundFn(args) {
+  var _args = _slicedToArray(args, 3),
+      binder = _args[0],
+      target = _args[1],
+      bindArgs = _args[2];
+
+  var boundLength = simple_bind_x_esm_getMax(simple_bind_x_esm_ZERO, target.length - simple_bind_x_esm_getMax(simple_bind_x_esm_ZERO, bindArgs.length - argsOffset));
+  var fn = boundFns[boundLength];
+  var boundFn = fn ? fn(binder, boundLength) : boundFns[simple_bind_x_esm_ZERO](binder);
+
+  if (target.prototype) {
+    /* eslint-disable-next-line lodash/prefer-noop */
+    var Empty = function Empty() {};
+
+    Empty.prototype = target.prototype;
+    boundFn.prototype = new Empty();
+    Empty.prototype = null;
+  }
+
+  return boundFn;
+};
+
+var simple_bind_x_esm_getResult = function getResult(target, boundArgs) {
+  /* eslint-disable-next-line babel/no-invalid-this */
+  var result = target.apply(this, boundArgs);
+  /* eslint-disable-next-line babel/no-invalid-this,babel/new-cap */
+
+  return simple_bind_x_esm_ObjectCtr(result) === result ? result : this;
+}; // eslint-disable jsdoc/check-param-names
+// noinspection JSCommentMatchesSignature
+
+/**
+ * The bind() method creates a new function that, when called, has its this
+ * keyword set to the provided value, with a given sequence of arguments
+ * preceding any provided when the new function is called.
+ *
+ * @param {Function} target - The target function.
+ * @param {*} [thisArg] - The value to be passed as the this parameter to the target
+ *  function when the bound function is called. The value is ignored if the
+ *  bound function is constructed using the new operator.
+ * @param {...*} [args] - Arguments to prepend to arguments provided to the bound
+ *  function when invoking the target function.
+ * @throws {TypeError} If target is not a function.
+ * @returns {Function} The bound function.
+ */
+// eslint-enable jsdoc/check-param-names
+
+
+var simple_bind_x_esm_bind = function bind(target, thisArg) {
+  simple_bind_x_esm_assertIsFunction(target);
+  /* eslint-disable-next-line prefer-rest-params */
+
+  var bindArgs = arguments;
+  var bound;
+
+  var binder = function binder() {
+    /* eslint-disable-next-line prefer-rest-params */
+    var boundArgs = util_pusher_x_esm(arguments, simple_bind_x_esm_ZERO, util_pusher_x_esm(bindArgs, argsOffset));
+    /* eslint-disable-next-line babel/no-invalid-this */
+
+    return this instanceof bound ? simple_bind_x_esm_getResult.apply(this, [target, boundArgs]) : target.apply(thisArg, boundArgs);
+  };
+
+  bound = getBoundFn([binder, target, bindArgs]);
+  return bound;
+};
+
+/* harmony default export */ var simple_bind_x_esm = (simple_bind_x_esm_bind);
+
+
+// CONCATENATED MODULE: ./node_modules/simple-call-x/dist/simple-call-x.esm.js
+
+
+var $TypeError = TypeError;
+var nativeApply = simple_bind_x_esm.apply,
+    nativeCall = simple_bind_x_esm.call;
+var $apply = simple_bind_x_esm(nativeCall, nativeApply);
+var simple_call_x_esm_toStringTag = simple_bind_x_esm(nativeApply, {}.toString);
+var simple_call_x_esm_ERROR_MESSAGE = ' is not a function';
+var simple_call_x_esm_funcType = '[object Function]';
+
+var simple_call_x_esm_assertIsFunction = function assertIsFunction(value) {
+  if (typeof value !== 'function' && simple_call_x_esm_toStringTag(value) !== simple_call_x_esm_funcType) {
+    throw new $TypeError(value + simple_call_x_esm_ERROR_MESSAGE);
+  }
+
+  return value;
+}; // eslint-disable jsdoc/check-param-names
+// noinspection JSCommentMatchesSignature
+
+/**
+ * The abstract operation Call is used to call the [[Call]] internal method of a function object.
+ *
+ * @function call
+ * @param {Function} F - The target function.
+ * @param {*} [V] - The context.
+ * @param {Array} [args] - Argument to call the function with.
+ * @throws {TypeError} If target is not a function.
+ * @returns {*} The the result of invoking the function.
+ * @see https://www.ecma-international.org/ecma-262/6.0/#sec-call
+ */
+// eslint-enable jsdoc/check-param-names
+
+
+var simple_call_x_esm_call = function call(F, V) {
+  /* eslint-disable-next-line prefer-rest-params */
+  return $apply(simple_call_x_esm_assertIsFunction(F), V, util_pusher_x_esm(arguments[2]));
+};
+
+/* harmony default export */ var simple_call_x_esm = (simple_call_x_esm_call);
+
+
+// CONCATENATED MODULE: ./node_modules/simple-methodize-x/dist/simple-methodize-x.esm.js
+
+
+var simple_methodize_x_esm_toStringTag = {}.toString;
+var simple_methodize_x_esm_ERROR_MESSAGE = 'methodize called on incompatible ';
+var simple_methodize_x_esm_funcType = '[object Function]';
+
+var simple_methodize_x_esm_assertIsFunction = function assertIsFunction(value) {
+  if (typeof value !== 'function' && simple_call_x_esm(simple_methodize_x_esm_toStringTag, value) !== simple_methodize_x_esm_funcType) {
+    throw new TypeError(simple_methodize_x_esm_ERROR_MESSAGE + value);
+  }
+
+  return value;
+};
+/**
+ * Methodize a prototype method. Compliant to 8 arguments.
+ *
+ * @param {Function} prototypeMethod - The prototype method to methodize.
+ * @throws {TypeError} If target is not a function.
+ * @returns {Function} The static method.
+ */
+
+
+var simple_methodize_x_esm_methodize = function methodize(prototypeMethod) {
+  simple_methodize_x_esm_assertIsFunction(prototypeMethod);
+  return function methodized() {
+    /* eslint-disable-next-line prefer-rest-params */
+    return simple_call_x_esm(prototypeMethod, arguments[0], util_pusher_x_esm(arguments, 1));
+  };
+};
+
+/* harmony default export */ var simple_methodize_x_esm = (simple_methodize_x_esm_methodize);
+
+
 // CONCATENATED MODULE: ./dist/truncate-x.esm.js
 
 
@@ -2487,19 +2775,20 @@ var array_slice_x_esm_slice = function slice(array, start, end) {
 
 
 
+
 var truncate_x_esm_EMPTY_STRING = '';
-var match = truncate_x_esm_EMPTY_STRING.match,
-    truncate_x_esm_slice = truncate_x_esm_EMPTY_STRING.slice,
-    search = truncate_x_esm_EMPTY_STRING.search,
-    indexOf = truncate_x_esm_EMPTY_STRING.indexOf,
-    lastIndexOf = truncate_x_esm_EMPTY_STRING.lastIndexOf;
-var aJoin = [].join;
-var truncate_x_esm_RegExpCtr = /none/.constructor;
+var match = simple_methodize_x_esm(truncate_x_esm_EMPTY_STRING.match);
+var truncate_x_esm_slice = simple_methodize_x_esm(truncate_x_esm_EMPTY_STRING.slice);
+var search = simple_methodize_x_esm(truncate_x_esm_EMPTY_STRING.search);
+var indexOf = simple_methodize_x_esm(truncate_x_esm_EMPTY_STRING.indexOf);
+var lastIndexOf = simple_methodize_x_esm(truncate_x_esm_EMPTY_STRING.lastIndexOf);
+var aJoin = simple_methodize_x_esm([].join);
 /* Used to match `RegExp` flags from their coerced string values. */
 
 var reFlags = /\w*$/;
-var truncate_x_esm_rxTest = reFlags.test;
-var rxExec = reFlags.exec;
+var truncate_x_esm_RegExpCtr = reFlags.constructor;
+var truncate_x_esm_rxTest = simple_methodize_x_esm(reFlags.test);
+var rxExec = simple_methodize_x_esm(reFlags.exec);
 /* Used to compose unicode character classes. */
 
 var rsAstralRange = "\\ud800-\\udfff";
@@ -2520,9 +2809,9 @@ var rsZWJ = "\\u200d";
 
 var reOptMod = "".concat(rsModifier, "?");
 var rsOptVar = "[".concat(rsVarRange, "]?");
-var rsOptJoin = "(?:".concat(rsZWJ, "(?:").concat(aJoin.call([rsNonAstral, rsRegional, rsSurrPair], '|'), ")").concat(rsOptVar).concat(reOptMod, ")*");
+var rsOptJoin = "(?:".concat(rsZWJ, "(?:").concat(aJoin([rsNonAstral, rsRegional, rsSurrPair], '|'), ")").concat(rsOptVar).concat(reOptMod, ")*");
 var rsSeq = rsOptVar + reOptMod + rsOptJoin;
-var rsSymbol = "(?:".concat(aJoin.call(["".concat(rsNonAstral + rsCombo, "?"), rsCombo, rsRegional, rsSurrPair, rsAstral], '|'), ")");
+var rsSymbol = "(?:".concat(aJoin(["".concat(rsNonAstral + rsCombo, "?"), rsCombo, rsRegional, rsSurrPair, rsAstral], '|'), ")");
 /*
  * Used to match string symbols
  * @see https://mathiasbynens.be/notes/javascript-unicode
@@ -2544,14 +2833,14 @@ var reHasComplexSymbol = new truncate_x_esm_RegExpCtr("[".concat(rsZWJ).concat(r
  */
 
 var stringSize = function _stringSize(string) {
-  if (to_boolean_x_esm(string) === false || truncate_x_esm_rxTest.call(reHasComplexSymbol, string) === false) {
+  if (to_boolean_x_esm(string) === false || truncate_x_esm_rxTest(reHasComplexSymbol, string) === false) {
     return string.length;
   }
 
   reComplexSymbol.lastIndex = 0;
   var result = 0;
 
-  while (truncate_x_esm_rxTest.call(reComplexSymbol, string)) {
+  while (truncate_x_esm_rxTest(reComplexSymbol, string)) {
     result += 1;
   }
 
@@ -2583,10 +2872,10 @@ var truncate_x_esm_getOptions = function getOptions(options) {
 };
 
 var getConsts = function getConsts(str) {
-  if (truncate_x_esm_rxTest.call(reHasComplexSymbol, str)) {
-    var matchSymbols = match.call(str, reComplexSymbol);
+  if (truncate_x_esm_rxTest(reHasComplexSymbol, str)) {
+    var matchSymbols = match(str, reComplexSymbol);
     return {
-      matchSymbols: match.call(str, reComplexSymbol),
+      matchSymbols: match(str, reComplexSymbol),
       strLength: matchSymbols.length
     };
   }
@@ -2599,11 +2888,11 @@ var getConsts = function getConsts(str) {
 
 var getNewEnd = function getNewEnd(rxSeperator, result) {
   var newEnd;
-  var rxMatch = rxExec.call(rxSeperator, result);
+  var rxMatch = rxExec(rxSeperator, result);
 
   while (rxMatch) {
     newEnd = rxMatch.index;
-    rxMatch = rxExec.call(rxSeperator, result);
+    rxMatch = rxExec(rxSeperator, result);
   }
 
   return newEnd;
@@ -2615,11 +2904,11 @@ var truncate_x_esm_getRxResult = function getRxResult(obj) {
       end = obj.end,
       result = obj.result;
 
-  if (search.call(truncate_x_esm_slice.call(str, end), separator)) {
-    var rxSeperator = to_boolean_x_esm(separator.global) ? separator : new truncate_x_esm_RegExpCtr(separator.source, "".concat(to_string_symbols_supported_x_esm(rxExec.call(reFlags, separator)), "g"));
+  if (search(truncate_x_esm_slice(str, end), separator)) {
+    var rxSeperator = to_boolean_x_esm(separator.global) ? separator : new truncate_x_esm_RegExpCtr(separator.source, "".concat(to_string_symbols_supported_x_esm(rxExec(reFlags, separator)), "g"));
     rxSeperator.lastIndex = 0;
     var newEnd = getNewEnd(rxSeperator, result);
-    return truncate_x_esm_slice.call(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
+    return truncate_x_esm_slice(result, 0, typeof newEnd === 'undefined' ? end : newEnd);
   }
 
   return result;
@@ -2640,11 +2929,11 @@ var truncate_x_esm_getResult = function getResult(obj) {
     });
   }
 
-  if (indexOf.call(str, separator, end) !== end) {
-    var index = lastIndexOf.call(result, separator);
+  if (indexOf(str, separator, end) !== end) {
+    var index = lastIndexOf(result, separator);
 
     if (index > -1) {
-      return truncate_x_esm_slice.call(result, 0, index);
+      return truncate_x_esm_slice(result, 0, index);
     }
   }
 
@@ -2688,20 +2977,18 @@ var truncate_x_esm_truncate = function truncate(string, options) {
     return omission;
   }
 
-  var result = matchSymbols ? aJoin.call(array_slice_x_esm(matchSymbols, 0, end), truncate_x_esm_EMPTY_STRING) : truncate_x_esm_slice.call(str, 0, end);
+  var result = matchSymbols ? aJoin(array_slice_x_esm(matchSymbols, 0, end), truncate_x_esm_EMPTY_STRING) : truncate_x_esm_slice(str, 0, end);
 
   if (is_nil_x_esm(separator)) {
     return result + omission;
   }
 
-  var secondEnd = matchSymbols ? result.length : end;
-  var secondResult = truncate_x_esm_getResult({
+  return truncate_x_esm_getResult({
     str: str,
     separator: separator,
-    end: secondEnd,
+    end: matchSymbols ? result.length : end,
     result: result
-  });
-  return secondResult + omission;
+  }) + omission;
 };
 
 /* harmony default export */ var truncate_x_esm = __webpack_exports__["default"] = (truncate_x_esm_truncate);
